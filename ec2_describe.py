@@ -10,6 +10,7 @@ ec2 = boto3.client ('ec2')
 
 def ec2_describe():
     response = ec2.describe_instances()
+    # breaking down response so list is easier to interate through on templates and routes
     instance_list = []
     for instances in response['Reservations']:
         for instance in instances['Instances']:
@@ -18,7 +19,11 @@ def ec2_describe():
                 instance_info[key] = value
             instance_list.append(instance_info)
 
-    pprint.pprint(instance_list[0]['InstanceId'])
     return instance_list
 
-ec2_describe()
+def instance_details():
+    # using brokendown list from ec2_describe fucntion
+    instance_list = ec2_describe()
+    
+    return instance_list
+

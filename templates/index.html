@@ -8,11 +8,12 @@
 <style>
     table, th, td {
       border:2px solid black;
+      text-align: center;
     }
 </style>
 <body>
-    <h1>Describe EC2</h1>
-    <h2>Instances Running</h2>
+    <h1>AWS EC2 Inventory</h1>
+    <h2>EC2 Instances</h2>
     <table style="width:100%">
         <tr>
           <th>Name</th>
@@ -22,9 +23,14 @@
         </tr>
         {% for instance in template_instance_list %}
         <tr>
-            <td>{{ instance['Tags'] }}</td>
-            <td>{{ instance['InstanceId'] }}</td>
-            <td>{{ instance['State']['Name'] }}</td>
+            <td>{% for tag in instance['Tags'] %}
+                {% if tag['Key'] == 'Name' %}
+                    {{ tag['Value'] | title }}
+                {% endif %}
+                {% endfor %}
+            </td>
+            <td><a href="{{ url_for('instance_details', instance_id=instance['InstanceId']) }}">{{ instance['InstanceId'] }}</a></td>
+            <td>{{ instance['State']['Name'] | title}}</td>
             <td>{{ instance['Placement']['AvailabilityZone'] }}</td>
         </tr>
         {% endfor %}
