@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}AWS-EC2-Details{% endblock %}
+
+    {% block page_content %}
+    <div class="alert alert-success alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Welcome!</strong> Select an EC2 in the list below to see details! 
+      </div>
+    <h2>EC2 Instances</h2>
+    <table class="table-hover" style="width:100%">
+        <tr>
+          <th>Name</th>
+          <th>Instance Id</th>
+          <th>Status</th>
+          <th>Availability Zone</th>
+        </tr>
+        {% for instance in template_instance_list %}
+        <tr>
+            <td>
+                {% for tag in instance['Tags'] %}
+                    {% if tag['Key'] == 'Name' %}
+                        {{ tag['Value'] | title }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td><a href="{{ url_for('instance_details', instance_id=instance['InstanceId']) }}">{{ instance['InstanceId'] }}</a></td>
+            <td>{{ instance['State']['Name'] | title}}</td>
+            <td>{{ instance['Placement']['AvailabilityZone'] }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endblock %}
