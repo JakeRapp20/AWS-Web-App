@@ -1,18 +1,12 @@
 {% extends "base.html" %}
 {% import 'bootstrap/wtf.html' as wtf %}
 
-{% block title %}AWS-EC2-Details{% endblock %}
+{% block title %}AWS-Tools{% endblock %}
 
     {% block page_content %}
-    <h1>
-        Hello, 
-        {% if name %} 
-            {{ name }}
-            {% else %}
-            Stranger
-            {% endif %}
-    </h1>
+    <h1>AWS Credentials</h1>    
     <form class="form form-horizontal" method="post" role="form", button_map={}>
+
       {{ template_access_key_form.hidden_tag() }}
       {{ wtf.form_errors(template_access_key_form, hiddens="only") }}
       {{ wtf.form_field(template_access_key_form.access_key) }}
@@ -27,5 +21,7 @@
     <div class="list-group">
         <a href="{{ url_for('ec2_summary') }}" class="list-group-item">EC2</a>
       </div>
+
+      
 
     {% endblock %}

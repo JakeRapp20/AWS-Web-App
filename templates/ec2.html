@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}AWS-EC2-Details{% endblock %}
+{% block title %}AWS-EC2{% endblock %}
 
     {% block page_content %}
     <div class="alert alert-success alert-dismissible fade in">
@@ -27,7 +27,10 @@
             <td><a href="{{ url_for('instance_details', instance_id=instance['InstanceId']) }}">{{ instance['InstanceId'] }}</a></td>
             <td>{{ instance['State']['Name'] | title}}</td>
             <td>{{ instance['Placement']['AvailabilityZone'] }}</td>
+            <td><form method="post" ><input type="submit" name="{{ instance['InstanceId'] }}" value="Start"></form></td>
+            <td><form method="post" ><input type="submit" name="{{ instance['InstanceId'] }}" value="Stop"></form></td>
         </tr>
         {% endfor %}
       </table>
+      {{ ec2_status }}
     {% endblock %}
