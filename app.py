@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, url_for
-from ec2 import ec2_describe, ec2_stop, ec2_start
+from ec2 import ec2_describe, backend_ec2_stop, backend_ec2_start
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -77,24 +77,24 @@ def ec2_summary():
     form = None
     for instance in instance_list:
         instance_ids.append(instance['InstanceId'])
-    if request.method == 'POST':
-        for instance in instance_list:
-            if request.form[instance['InstanceId']] == 'Stop':
-                instances_to_stop_or_start.append(instance['InstanceId'])
-                ec2_stop(instances_to_stop_or_start)
-                status = 'Stopping'
-                return redirect(url_for('ec2_summary'))
-            if request.form[instance['InstanceId']] == 'Start':
-                instances_to_stop_or_start.append(instance['InstanceId'])
-                ec2_start(instances_to_stop_or_start)
-                status = 'Starting'
-                return redirect(url_for('ec2_summary'))
-            else:
-                pass
+    # if request.method == 'POST':
+    #     for instance in instance_list:
+    #         if request.form[instance['InstanceId']] == 'Stop':
+    #             instances_to_stop_or_start.append(instance['InstanceId'])
+    #             ec2_stop(instances_to_stop_or_start)
+    #             status = 'Stopping'
+    #             return redirect(url_for('ec2_summary'))
+    #         if request.form[instance['InstanceId']] == 'Start':
+    #             instances_to_stop_or_start.append(instance['InstanceId'])
+    #             ec2_start(instances_to_stop_or_start)
+    #             status = 'Starting'
+    #             return redirect(url_for('ec2_summary'))
+    #         else:
+    #             pass
     
-    elif request.method == 'GET':
+    # elif request.method == 'GET':
 
-        return render_template("ec2.html", template_instance_list=instance_list, template_session=session, aws_access_key=session.get('access_key'),
+    return render_template("ec2.html", template_instance_list=instance_list, template_session=session, aws_access_key=session.get('access_key'),
                            aws_secret_access_key=session.get('secret_access_key'), ec2_status=status)
 
 
@@ -111,4 +111,18 @@ def instance_details(instance_id):
 
     return render_template("instance.html", template_instance_list=instance_list, template_instance_details=instance_detailed_dict)
 
+@app.route('/stop-instance/<instance_id>')
+def ec2_stop(instance_id):
+
+    backend_ec2_stop(instance_id)
+    return redirect(url_for('ec2_summary'))
+
+
+
+@app.route('/start-instance/<instance_id>')
+def ec2_start(instance_id):
+    print("It's working"
+    )
+    backend_ec2_start(instance_id)
+    return redirect(url_for('ec2_summary'))
 
